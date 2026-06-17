@@ -33,9 +33,7 @@ class BaseDB:
             )
             conn.commit()
 
-            if cursor.rowcount > 0:
-                return {"messege": f"ID '{id}' updated successfully"}
-            return {"messege": f"ID '{id}' update failed"}
+            return cursor.rowcount > 0
             
     def get_all(self):
         conn = self.db.connection
