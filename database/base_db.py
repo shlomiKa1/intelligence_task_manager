@@ -21,6 +21,22 @@ class BaseDB:
             if cursor.lastrowid:
                 return data
             return {"message": "Failed to created"}
+        
+    def update(self, id, data):
+        placeparts = ", ".join([f"{key} = %s" for key in data.keys()])
+        conn = self.db.connection
+        
+        with conn.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE {self.table_name} SET ({placeparts})",
+                tuple(list(data.values()) + [id])
+            )
+            conn.commit()
+
+            if cursor.rowcount > 0:
+                return {"messege": f"ID '{id}' updated successfully"}
+            return {"messege": f"ID '{id}' update failed"}
+            
     
         
 
