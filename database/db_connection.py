@@ -68,3 +68,11 @@ class ConnectionDB:
                 """
             )
             conn.commit()
+
+
+try:
+    db = ConnectionDB(CONNECTION["host"], CONNECTION["user"], CONNECTION["password"])
+
+except Exception as e:
+    print(e)
+    raise
