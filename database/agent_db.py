@@ -17,3 +17,15 @@ class AgentDB(BaseDB):
     
     def get_agent_by_id(self, id):
         return self.get_by_id(id)
+    
+    def deactivate_agent(self, id):
+        conn = self.db.connection
+
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE agent SET is_active = False WHERE id = %s",
+                (id,)
+            )
+            if cursor.rowcount > 0:
+                return {"message": f"ID '{id}' agent is deactivate"}
+            return {"message": f"deactivate agent ID '{id}' faild"}
