@@ -32,10 +32,18 @@ class AgentDB(BaseDB):
             return {"message": f"ID '{id}' agent is deactivate"}
         return {"message": f"deactivate agent ID '{id}' faild"}
         
-    def increment_agent(self, id):
+    def increment_completed(self, id):
         agent = self.get_agent_by_id(id)
 
         if self.update_agent(id, {"completed_missions": agent["completed_missions"] +1}):
             return {"message": f"ID '{id}' agent update completed missions success"}
         return {"message": f"ID '{id}' agent update completed missions failed"}
+    
+    def increment_failed(self, id):
+        agent = self.get_agent_by_id(id)
+
+        if self.update_agent(id, {"failed_missions": agent["failed_missions"] +1}):
+            return {"message": f"ID '{id}' agent update failed missions success"}
+        return {"message": f"ID '{id}' agent update failed missions failed"}
+
     
