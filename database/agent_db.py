@@ -57,3 +57,10 @@ class AgentDB(BaseDB):
             "total": total,
             "success_rate": success_rate
         }
+    
+    def count_active_agents(self):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM agents WHERE is_active = TRUE")
+            return cursor.fetchall()
