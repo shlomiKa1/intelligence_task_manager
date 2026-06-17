@@ -44,3 +44,9 @@ class BaseDB:
             cursor.execute(f"SELECT * FROM {self.table_name}")
             return cursor.fetchall()
         
+    def get_by_id(self, id):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = %s", (id,))
+            return cursor.fetchone()
