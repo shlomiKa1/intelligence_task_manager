@@ -64,3 +64,6 @@ class AgentDB(BaseDB):
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM agents WHERE is_active = TRUE")
             return cursor.fetchall()
+        
+
+agents_db = AgentDB(db, "agents")
