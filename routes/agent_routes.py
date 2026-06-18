@@ -30,3 +30,12 @@ def agent_by_id(id: int):
     
     logger.info("Return agent ID: %s", id)
     return agent
+
+@router_agents.put("/{id}")
+def edit_agent(id: int, data):
+    agent_by_id(id) # Check  if agent exists
+
+    updated = agents_db.update_agent(id, data)
+
+    logger.info("Agent ID: %s updated successfully", id)
+    return updated
