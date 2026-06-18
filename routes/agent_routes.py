@@ -33,9 +33,22 @@ def agent_by_id(id: int):
 
 @router_agents.put("/{id}")
 def edit_agent(id: int, data):
-    agent_by_id(id) # Check  if agent exists
-
     updated = agents_db.update_agent(id, data)
+
+    if not updated:
+        raise HTTPException(404, "Agent not found")
 
     logger.info("Agent ID: %s updated successfully", id)
     return updated
+
+@router_agents.put("/{id}/deactivate")
+def deactivate_agent_by_id(id: int):
+    agent_by_id(id)
+
+    deactivate = agents_db.deactivate_agent(id)
+
+    if not deactivate:
+        raise HTTPException(404, "Agent not found")
+    
+    logger.info("Agent ID: %s deactivated", id)
+    return deactivate
