@@ -7,13 +7,13 @@ router_agents = APIRouter()
 @router_agents.post("")
 def add_agent(data: dict):
     logger.info("Go to database")
-    added = agents_db.create_agent(data)
+    created = agents_db.create_agent(data)
 
-    if added["success"]:
+    if created["success"]:
         raise HTTPException(500, "Internal Server Error")
     
-    logger.info("Agent created successfully: id=%s", added["id"])
-    return added
+    logger.info("Agent created successfully: id=%s", created["message"]["id"])
+    return created
 
 @router_agents.get("")
 def all_agents():
