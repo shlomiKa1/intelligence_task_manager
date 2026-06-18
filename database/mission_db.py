@@ -15,13 +15,20 @@ class MissionsDB(BaseDB):
 
         return self.create(data)
     
-    def update_mission(self, id, data):
-        if self.update(id, data):
-            return {"message": f"ID '{id}' mission updated successfully"}
-        return {"message": f"Update mission ID '{id}' failed"}
+    def update_mission_status(self, id, status):
+        if self.update(id, status):
+            return {"message": f"ID '{id}' status mission updated successfully"}
+        return {"message": f"Update - status mission ID '{id}' failed"}
     
     def get_all_missions(self):
         return self.get_all()
     
     def get_mission_by_id(self, id):
         return self.get_by_id(id)
+    
+    def assign_mission(self, m_id, a_id):
+        agent_id = {"assigned_agent_id": a_id}
+
+        if self.update(m_id, agent_id):
+            return {"succes": True, "message": f"Assign mission ID '{m_id}' to agent ID '{a_id}' success"}
+        return {"succes": False, "message": f"Assign mission ID '{m_id}' to agent ID '{a_id}' failed"}
