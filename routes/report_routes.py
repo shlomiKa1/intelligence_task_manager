@@ -17,3 +17,15 @@ def get_summary():
         "failed_missions": missions_db.count_by_status("FAILED"),
         "critical_missions": missions_db.count_critical_missions()
     }
+
+@router_reports.get("/missions-by-status")
+def get_missions_by_status():
+    
+    return
+
+@router_reports.get("/top_agent")
+def get_top_agent():
+    agents = missions_db.get_top_agent()
+
+    logger.info("Return '%s' top agents", len(agents))
+    return agents
