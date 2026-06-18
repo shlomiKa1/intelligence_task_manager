@@ -42,7 +42,7 @@ class MissionsDB(BaseDB):
                 WHERE assigned_agent_id = %s AND (status = IN_PROGRESS OR status = ASSIGNED)""",
                 (id,)
             )
-            
+        
             return cursor.fetchall()
 
     def count_all_missions(self):
@@ -50,4 +50,16 @@ class MissionsDB(BaseDB):
 
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT COUNT(title) FROM missions")
-            return cursor.fetchall()
+            return cursor.fetchone()["COUNT(title)"]
+    
+    def count_by_status(self, status):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                "SELECT COUNT(status) FROM missions WHERE status = %s",
+                (status,)
+            )
+
+            return cursor.fetchone()["COUNT(status)"]
+        
