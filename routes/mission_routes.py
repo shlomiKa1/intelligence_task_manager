@@ -38,7 +38,7 @@ def start_mission(id: int):
     mission = mission_by_id(id)
 
     logger.info("Chack if can start mission")
-    if mission["status"] == "ASSIGNED":
+    if check_status(mission, "ASSIGNED"):
         started = missions_db.update_mission_status(id, "IN_PROGRESS")
         logger.info("Mission ID '%s' start successfully", id)
         return started
@@ -49,9 +49,24 @@ def start_mission(id: int):
 def complate_mission(id: int):
     mission = mission_by_id(id)
 
-    if mission["status"] == "IN_PROGRESS":
+    if check_status(mission, "IN_PROGRESS"):
         comleted = missions_db.update_mission_status(id, "COMPLETED")
         logger.info("Mission ID '%s' comleted successfully", id)
         return comleted
     
     raise HTTPException(400, "Mission not available")
+
+@router_missions.put("/{id}/fail")
+def fail_mission(id: int):
+    mission = mission_by_id(id)
+
+    if check_status(mission, "IN_PROGRESS"):
+        failed = missions_db.update_mission_status(id, "fail")
+        logger.info("Mission ID '%s' failed successfully", id)
+        return failed
+    
+    raise HTTPException(400, "Mission not available")
+
+def check_status(mission, status):
+    return mission["status"] == status
+
