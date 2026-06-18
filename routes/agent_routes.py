@@ -35,7 +35,7 @@ def agent_by_id(id: int):
 def edit_agent(id: int, data):
     updated = agents_db.update_agent(id, data)
 
-    if not updated:
+    if not updated["success"]:
         raise HTTPException(404, "Agent not found")
 
     logger.info("Agent ID: %s updated successfully", id)
@@ -47,8 +47,18 @@ def deactivate_agent_by_id(id: int):
 
     deactivate = agents_db.deactivate_agent(id)
 
-    if not deactivate:
+    if not deactivate["success"]:
         raise HTTPException(404, "Agent not found")
     
     logger.info("Agent ID: %s deactivated", id)
     return deactivate
+
+@router_agents.get("/{id}/performance")
+def performance_agent(id: int):
+    performance = agents_db.get_agent_performance(id)
+
+    if not performance:
+        raise HTTPException(404, "Agent not found")
+    
+    logger.info("Return performance agent by ID: %s", id)
+    return performance
