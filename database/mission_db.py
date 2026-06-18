@@ -45,3 +45,9 @@ class MissionsDB(BaseDB):
             
             return cursor.fetchall()
 
+    def count_all_missions(self):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT COUNT(title) FROM missions")
+            return cursor.fetchall()
