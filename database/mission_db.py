@@ -32,3 +32,16 @@ class MissionsDB(BaseDB):
         if self.update(m_id, agent_id):
             return {"succes": True, "message": f"Assign mission ID '{m_id}' to agent ID '{a_id}' success"}
         return {"succes": False, "message": f"Assign mission ID '{m_id}' to agent ID '{a_id}' failed"}
+    
+    def get_open_missions_by_agent(self, id):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                """SELECT * FROM missions
+                WHERE assigned_agent_id = %s AND (status = IN_PROGRESS OR status = ASSIGNED)""",
+                (id,)
+            )
+            
+            return cursor.fetchall()
+
