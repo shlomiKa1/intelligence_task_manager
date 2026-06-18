@@ -76,3 +76,15 @@ class MissionsDB(BaseDB):
             )
 
             return cursor.fetchone(["COUNT(risk_level)"])
+        
+    def get_top_agent(self):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                """SELECT * FROM missions
+                WHERE status = COMPLETED AND (SELECT MAX(status) FROM missions)"""
+            )
+
+            return cursor.fetchall()
+ 
