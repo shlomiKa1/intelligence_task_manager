@@ -14,3 +14,9 @@ def add_agent(data: dict):
     logger.info("Agent created successfully: id=%s", added["id"])
     return added
 
+@router_agents.get("")
+def all_agents():
+    agents = agents_db.get_all_agents()
+    logger.info("Return '%s' agents", len(agents))
+    return agents
+
