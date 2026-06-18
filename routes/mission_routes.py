@@ -21,3 +21,13 @@ def all_missions():
     
     logger.info("Return '%s' missions", len(missions))
     return missions
+
+@router_missions.get("/{id}")
+def mission_by_id(id: int):
+    mission = missions_db.get_mission_by_id(id)
+
+    if not mission:
+        raise HTTPException(404, "Mission not found")
+    
+    logger.info("Return mission by ID: %s", id)
+    return mission
