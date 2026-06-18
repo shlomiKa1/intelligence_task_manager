@@ -10,3 +10,6 @@ def calculate_risk_level(level):
     
     if level >= 25:
         return "CRITICAL"
+
+def check_status(mission, status):
+    return mission["status"] == status

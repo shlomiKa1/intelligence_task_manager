@@ -19,8 +19,8 @@ class BaseDB:
             conn.commit()
             
             if cursor.lastrowid:
-                return data
-            return {"message": "Failed to created"}
+                return {"success": True, "message": data}
+            return {"success": False, "message": "Failed to created"}
         
     def update(self, id, data):
         placeparts = ", ".join([f"{key} = %s" for key in data.keys()])
