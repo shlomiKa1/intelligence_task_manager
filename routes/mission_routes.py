@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from database.mission_db import missions_db
+from database.agent_db import agents_db
 from logs.logger_config import logger
 
 
@@ -36,7 +37,21 @@ def mission_by_id(id: int):
 def start_mission(id: int):
     mission = mission_by_id(id)
 
+    logger.info("Chack if can start mission")
     if mission["status"] == "ASSIGNED":
         started = missions_db.update_mission_status(id, "IN_PROGRESS")
+        logger.info("Mission ID '%s' start successfully", id)
         return started
+    
+    raise HTTPException(400, "Mission not available")
+
+@router_missions.put("/{id}/complate")
+def complate_mission(id: int):
+    mission = mission_by_id(id)
+
+    if mission["status"] == "IN_PROGRESS":
+        comleted = missions_db.update_mission_status(id, "COMPLETED")
+        logger.info("Mission ID '%s' comleted successfully", id)
+        return comleted
+    
     raise HTTPException(400, "Mission not available")
