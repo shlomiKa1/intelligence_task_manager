@@ -14,3 +14,10 @@ def add_mission(data):
     
     logger.info("Agent created successfully: id=%s", created["message"]["id"])
     return created
+
+router_missions.get("")
+def all_missions():
+    missions = missions_db.get_all_missions()
+    
+    logger.info("Return '%s' missions", len(missions))
+    return missions
