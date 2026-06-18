@@ -16,6 +16,8 @@ class MissionsDB(BaseDB):
         return self.create(data)
     
     def update_mission_status(self, id, status):
+        status = {"status": status}
+
         if self.update(id, status):
             return {"success": True, "message": f"ID '{id}' status mission updated successfully"}
         return {"success": False, "message": f"Update - status mission ID '{id}' failed"}
@@ -39,7 +41,7 @@ class MissionsDB(BaseDB):
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute(
                 """SELECT * FROM missions
-                WHERE assigned_agent_id = %s AND (status = IN_PROGRESS OR status = ASSIGNED)""",
+                WHERE assigned_agent_id = %s AND (status = 'IN_PROGRESS' OR status = 'ASSIGNED')""",
                 (id,)
             )
         
@@ -72,10 +74,10 @@ class MissionsDB(BaseDB):
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute(
                 """SELECT COUNT(risk_level) FROM missions
-                WHERE risk_level = CRITICAL"""
+                WHERE risk_level = 'CRITICAL'"""
             )
 
-            return cursor.fetchone(["COUNT(risk_level)"])
+            return cursor.fetchone()["COUNT(risk_level)"]
         
     def get_top_agent(self):
         conn = self.db.connection
@@ -83,7 +85,7 @@ class MissionsDB(BaseDB):
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute(
                 """SELECT * FROM missions
-                WHERE status = COMPLETED AND (SELECT MAX(status) FROM missions)"""
+                WHERE status = 'COMPLETED' AND (SELECT MAX(status) FROM missions)"""
             )
 
             return cursor.fetchall()

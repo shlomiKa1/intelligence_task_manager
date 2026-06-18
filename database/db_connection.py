@@ -8,6 +8,7 @@ class ConnectionDB:
         self.user = user
         self.password = password
 
+        # self._connection = None
         self.get_connect()
         self.create_database()
         self.create_tables()
@@ -31,6 +32,7 @@ class ConnectionDB:
         with conn.cursor() as cursor:
             # f-string it's ok, because the users don't have access
             cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
+            cursor.execute(f"USE {DATABASE}")
             conn.commit()
 
     def create_tables(self):
@@ -50,7 +52,6 @@ class ConnectionDB:
                     )
                 """
             )
-            conn.commit()
         
             cursor.execute(
                 """
@@ -59,8 +60,8 @@ class ConnectionDB:
                         title VARCHAR(255) NOT NULL,
                         description TEXT NOT NULL,
                         location VARCHAR(255) NOT NULL,
-                        difficulty INT NOT NULL CHECK (difficulty >= 1 AND difficulty <= 10)
-                        importance INT NOT NULL CHECK (importance >= 1 AND importance <= 10)
+                        difficulty INT NOT NULL CHECK (difficulty >= 1 AND difficulty <= 10),
+                        importance INT NOT NULL CHECK (importance >= 1 AND importance <= 10),
                         status ENUM("NEW", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "FAILED", "CANCELLED"),
                         risk_level VARCHAR(255),
                         assigned_agent_id INT DEFAULT NULL

@@ -55,8 +55,8 @@ class AgentDB(BaseDB):
         conn = self.db.connection
 
         with conn.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM agents WHERE is_active = TRUE")
-            return cursor.fetchall()
+            cursor.execute("SELECT COUNT(is_active) FROM agents WHERE is_active = TRUE")
+            return cursor.fetchone()["COUNT(is_active)"]
         
 
 agents_db = AgentDB(db, "agents")

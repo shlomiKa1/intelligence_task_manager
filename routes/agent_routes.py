@@ -1,18 +1,17 @@
 from fastapi import APIRouter, HTTPException
 from database.agent_db import agents_db
 from logs.logger_config import logger
+from models.agent_model import Agent, Updateagent
 
 router_agents = APIRouter()
 
 @router_agents.post("")
-def add_agent(data: dict):
+def add_agent(data: Agent):
     logger.info("Go to database")
-    created = agents_db.create_agent(data)
+    created = agents_db.create_agent(data.model_dump())
+    print(created)
 
-    if created["success"]:
-        raise HTTPException(500, "Internal Server Error")
-    
-    logger.info("Agent created successfully: id=%s", created["message"]["id"])
+    logger.info("Agent created successfully: id=%s", created["new_id"])
     return created
 
 @router_agents.get("")
@@ -32,8 +31,8 @@ def agent_by_id(id: int):
     return agent
 
 @router_agents.put("/{id}")
-def edit_agent(id: int, data):
-    updated = agents_db.update_agent(id, data)
+def edit_agent(id: int, data: Updateagent):
+    updated = agents_db.update_agent(id, data.model_dump(exclude_unset=True))
 
     if not updated["success"]:
         raise HTTPException(404, "Agent not found")

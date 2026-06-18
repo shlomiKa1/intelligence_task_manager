@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException
-# from .agent_routes import agent_by_id, agents_db
+from fastapi import APIRouter
 from .mission_routes import missions_db, agents_db
 from logs.logger_config import logger
 
@@ -20,11 +19,19 @@ def get_summary():
 
 @router_reports.get("/missions-by-status")
 def get_missions_by_status():
+    logger.info("Return statuses of missions")
     
-    return
+    return {
+        "open": missions_db.count_by_status("ASSIGNED"),
+        "in_progress": missions_db.count_by_status("IN_PROGRESS"),
+        "completed": missions_db.count_by_status("COMPLETED"),
+        "failed": missions_db.count_by_status("FAILED"),
+        "critical": missions_db.count_critical_missions()    
+    }
 
 @router_reports.get("/top_agent")
 def get_top_agent():
+    logger.info("Check top agent in database")
     agents = missions_db.get_top_agent()
 
     logger.info("Return '%s' top agents", len(agents))

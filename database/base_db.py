@@ -7,7 +7,7 @@ class BaseDB:
         self.table_name = table_name
 
     def create(self, data):
-        columns = ", ".join(data.key())
+        columns = ", ".join(data.keys())
         placeparts = ", ".join(["%s"] * len(data.keys()))
         conn = self.db.connection
 
@@ -19,16 +19,16 @@ class BaseDB:
             conn.commit()
             
             if cursor.lastrowid:
-                return {"success": True, "message": data}
+                return {"success": True, "message": data, "new_id": cursor.lastrowid}
             return {"success": False, "message": "Failed to created"}
         
     def update(self, id, data):
         placeparts = ", ".join([f"{key} = %s" for key in data.keys()])
         conn = self.db.connection
-        
-        with conn.cursor() as cursor:
+
+        with conn.cursor(dictionary=True) as cursor:
             cursor.execute(
-                f"UPDATE {self.table_name} SET ({placeparts}) WHERE id = %s",
+                f"UPDATE {self.table_name} SET {placeparts} WHERE id = %s",
                 tuple(list(data.values()) + [id])
             )
             conn.commit()
