@@ -61,9 +61,20 @@ def fail_mission(id: int):
     mission = mission_by_id(id)
 
     if check_status(mission, "IN_PROGRESS"):
-        failed = missions_db.update_mission_status(id, "fail")
+        failed = missions_db.update_mission_status(id, "FAILED")
         logger.info("Mission ID '%s' failed successfully", id)
         return failed
+    
+    raise HTTPException(400, "Mission not available")
+
+@router_missions.put("/{id}/cancel")
+def cancel_mission(id: int):
+    mission = mission_by_id(id)
+
+    if check_status(mission, "NEW") or check_status(mission, "ASSIGNED"):
+        cancelled = missions_db.update_mission_status(id, "CANCELLED")
+        logger.info("Mission ID '%s' cancelled successfully", id)
+        return cancelled
     
     raise HTTPException(400, "Mission not available")
 
