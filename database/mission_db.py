@@ -88,3 +88,5 @@ class MissionsDB(BaseDB):
 
             return cursor.fetchall()
  
+
+missions_db = MissionsDB(db, "missions")
