@@ -63,3 +63,16 @@ class MissionsDB(BaseDB):
 
             return cursor.fetchone()["COUNT(status)"]
         
+    def count_open_missions(self):
+        return self.count_by_status("IN_PROGRESS")
+
+    def count_critical_missions(self):
+        conn = self.db.connection
+
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                """SELECT COUNT(risk_level) FROM missions
+                WHERE risk_level = CRITICAL"""
+            )
+
+            return cursor.fetchone(["COUNT(risk_level)"])
