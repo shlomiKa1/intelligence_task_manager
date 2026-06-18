@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from database.mission_db import missions_db
-from database.agent_db import agents_db
+# from database.agent_db import agents_db
+from .agent_routes import agent_by_id, agents_db
 from logs.logger_config import logger
-
+from services.service import check_status
+from config import MAX_MISSIONS
 
 router_missions = APIRouter()
 
@@ -78,6 +80,26 @@ def cancel_mission(id: int):
     
     raise HTTPException(400, "Mission not available")
 
-def check_status(mission, status):
-    return mission["status"] == status
+@router_missions.put("/{id}/assign/{agent_id}")
+def assign_mission_by_ids(id: int, agent_id: int):
+    mission = mission_by_id(id)
+    agent = agent_by_id(agent_id)
 
+    if not check_status(mission, "NEW"):
+        raise HTTPException(400, "Mission not available")
+    
+    if not agent["is_active"]:
+        raise HTTPException(400, "Agent is not active")
+    
+    if missions_db.get_open_missions_by_agent(id) >= MAX_MISSIONS:
+        logger.error("Agent has reached maximum missions: id=%s", agent_id)
+        raise HTTPException(400, "Agent has reached maximum missions")
+    
+    if not (mission["risk_level"] == "CRITICAL" and agent["agent_rank"] == "Commander"):
+        logger.error("Only Commander can handle critical missions: mission_id=%s, agent_id=%s", id, agent_id)
+        raise HTTPException(400, "Only Commander can handle critical missions")
+
+    assigned = missions_db.assign_mission(id, agent_id)
+
+    logger.info("Mission '%s' assigned to agent '%s'", id, agent_id)
+    return assigned
