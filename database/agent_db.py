@@ -49,8 +49,7 @@ class AgentDB(BaseDB):
     def get_agent_performance(self, id):
         agent = self.get_agent_by_id(id)
         total = agent["completed_missions"] + agent["failed_missions"]
-        success_rate = agent["completed_missions"]/agent["failed_missions"] * total
-
+        success_rate = agent["completed_missions"]/total * 100
         return {
             "completed": agent["completed_missions"],
             "failed": agent["failed_missions"],

@@ -41,8 +41,8 @@ class ConnectionDB:
                 """
                     CREATE TABLE IF NOT EXISTS agents(
                         id INT PRIMARY KEY AUTO_INCREMENT,
-                        name VARCHAR(50) NOT NULL,
-                        specialty VARCHAR(50) NOT NULL,
+                        name VARCHAR(255) NOT NULL,
+                        specialty VARCHAR(255) NOT NULL,
                         is_active BOOLEAN DEFAULT TRUE,
                         completed_missions INT DEFAULT 0,
                         failed_missions INT DEFAULT 0,
@@ -56,13 +56,13 @@ class ConnectionDB:
                 """
                     CREATE TABLE IF NOT EXISTS missions(
                         id INT PRIMARY KEY AUTO_INCREMENT,
-                        title VARCHAR(75) NOT NULL,
+                        title VARCHAR(255) NOT NULL,
                         description TEXT NOT NULL,
-                        location VARCHAR(25) NOT NULL,
-                        difficulty INT(10),
-                        importance INT(10),
+                        location VARCHAR(255) NOT NULL,
+                        difficulty INT NOT NULL CHECK (difficulty >= 1 AND difficulty <= 10)
+                        importance INT NOT NULL CHECK (importance >= 1 AND importance <= 10)
                         status ENUM("NEW", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "FAILED", "CANCELLED"),
-                        risk_level VARCHAR,
+                        risk_level VARCHAR(255),
                         assigned_agent_id INT DEFAULT NULL
                     )
                 """

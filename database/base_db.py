@@ -8,7 +8,7 @@ class BaseDB:
 
     def create(self, data):
         columns = ", ".join(data.key())
-        placeparts = "%s".join(data.keys())
+        placeparts = ", ".join(["%s"] * len(data.keys()))
         conn = self.db.connection
 
         with conn.cursor() as cursor:
@@ -28,7 +28,7 @@ class BaseDB:
         
         with conn.cursor() as cursor:
             cursor.execute(
-                f"UPDATE {self.table_name} SET ({placeparts})",
+                f"UPDATE {self.table_name} SET ({placeparts}) WHERE id = %s",
                 tuple(list(data.values()) + [id])
             )
             conn.commit()

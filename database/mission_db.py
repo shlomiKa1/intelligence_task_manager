@@ -18,7 +18,7 @@ class MissionsDB(BaseDB):
     def update_mission(self, id, data):
         if self.update(id, data):
             return {"message": f"ID '{id}' mission updated successfully"}
-        return {"message": f"Updated  mission ID '{id}' failed"}
+        return {"message": f"Update mission ID '{id}' failed"}
     
     def get_all_missions(self):
         return self.get_all()
