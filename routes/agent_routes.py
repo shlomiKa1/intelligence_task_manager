@@ -11,6 +11,7 @@ def add_agent(data: dict):
 
     if added["success"]:
         raise HTTPException(500, "Internal Server Error")
+    
     logger.info("Agent created successfully: id=%s", added["id"])
     return added
 
@@ -20,3 +21,12 @@ def all_agents():
     logger.info("Return '%s' agents", len(agents))
     return agents
 
+@router_agents.get("/{id}")
+def agent_by_id(id: int):
+    agent = agents_db.get_agent_by_id(id)
+
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+    
+    logger.info("Return agent ID: %s", id)
+    return agent
