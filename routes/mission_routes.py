@@ -31,3 +31,12 @@ def mission_by_id(id: int):
     
     logger.info("Return mission by ID: %s", id)
     return mission
+
+@router_missions.put("/{id}/start")
+def start_mission(id: int):
+    mission = mission_by_id(id)
+
+    if mission["status"] == "ASSIGNED":
+        started = missions_db.update_mission_status(id, "IN_PROGRESS")
+        return started
+    raise HTTPException(400, "Mission not available")
